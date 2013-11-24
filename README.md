@@ -17,7 +17,7 @@ It provides DOM and SAX encoders and decoders, using the standards APIs.
     xmlreader.setContentHandler(myhandler);
     xmlreader.setDTDHandler(myhandler);
     xmlreader.setProperty("http://xml.org/sax/properties/lexical-handler", myhandler);
-    xmlreader.parse(new InputSource(new FileInputStream(origen)));
+    xmlreader.parse(new InputSource(new FileInputStream(in)));
     ...
     
 Also, you can use a `Transformer` with `FastInfosetResult` and `FastInfosetSource`.
