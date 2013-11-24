@@ -6,6 +6,7 @@ package fastinfoset;
 
 import fastinfoset.Algorithm.Algorithm;
 import fastinfoset.Algorithm.Builtin.CDATA;
+import fastinfoset.Alphabet.Alphabet;
 import fastinfoset.Document.DocumentType;
 import fastinfoset.Document.Element.Attribute;
 import fastinfoset.Document.Element.FastInfosetAttributes;
@@ -13,6 +14,7 @@ import fastinfoset.Document.Element.NamespaceAttribute;
 import fastinfoset.Document.Notation;
 import fastinfoset.Document.ProcessingInstruction;
 import fastinfoset.Document.UnparsedEntity;
+import fastinfoset.sax.AlphabetHandler;
 import fastinfoset.sax.ObjectAlgorithmHandler;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -30,7 +32,7 @@ import org.xml.sax.ext.Locator2;
  *
  * @author rpablos
  */
-public class SAX_FI_Encoder extends Encoder implements ContentHandler, DTDHandler, LexicalHandler, ObjectAlgorithmHandler {
+public class SAX_FI_Encoder extends Encoder implements ContentHandler, DTDHandler, LexicalHandler, ObjectAlgorithmHandler,AlphabetHandler {
 
     protected boolean isStandAlone = false;
     
@@ -244,6 +246,11 @@ public class SAX_FI_Encoder extends Encoder implements ContentHandler, DTDHandle
         } catch (IOException ex) {
                 throw new SAXException(ex);
         }
+    }
+
+    @Override
+    public void alphabet(String str, Alphabet alphabet) throws SAXException {
+        object(str, alphabet);
     }
     
 }

@@ -5,6 +5,7 @@
 package fastinfoset;
 
 import fastinfoset.Algorithm.Builtin.CDATA;
+import fastinfoset.Alphabet.Alphabet;
 import fastinfoset.Document.DocumentType;
 import fastinfoset.Document.Element.Attribute;
 import fastinfoset.Document.Element.NamespaceAttribute;
@@ -12,6 +13,7 @@ import fastinfoset.Document.Element.SAXAttributes;
 import fastinfoset.Document.Notation;
 import fastinfoset.Document.ProcessingInstruction;
 import fastinfoset.Document.UnparsedEntity;
+import fastinfoset.sax.AlphabetHandler;
 import fastinfoset.sax.ObjectAlgorithmHandler;
 import fastinfoset.util.EncodedString;
 import java.io.IOException;
@@ -43,6 +45,7 @@ public class SAX_FI_Decoder extends Decoder implements XMLReader {
     private ErrorHandler _errorHandler;
     private LexicalHandler _lexicalHandler;
     private ObjectAlgorithmHandler _objectAlgorithmHandler = null;
+    private AlphabetHandler _alphabetHandler = null;
     private static final String LEXICAL_HANDLER_PROPERTY =  "http://xml.org/sax/properties/lexical-handler";
     private static final String NAMESPACE_PREFIXES_FEATURE = "http://xml.org/sax/features/namespace-prefixes";
     private static final String NAMESPACES_FEATURE = "http://xml.org/sax/features/namespaces";
@@ -170,7 +173,13 @@ public class SAX_FI_Decoder extends Decoder implements XMLReader {
     public ObjectAlgorithmHandler getObjectAlgorithmHandler() {
         return _objectAlgorithmHandler;
     }
-
+    public void setAlphabetHandler(AlphabetHandler handler) {
+        _alphabetHandler = handler;
+    }
+    
+    public AlphabetHandler getAlphabetHandler() {
+        return _alphabetHandler;
+    }
     @Override
     public void parse(InputSource input) throws IOException, SAXException {
         try {
@@ -316,7 +325,10 @@ public class SAX_FI_Decoder extends Decoder implements XMLReader {
                                 _objectAlgorithmHandler.object(text.theData, text.AlgorithmIndex);
                             else
                                 _objectAlgorithmHandler.object(text.algorithm.objectFromByteArray(text.theData), text.algorithm);
-                        } else {
+                        } else if ((_alphabetHandler != null) && (text.type.equals(text.type.Alphabet))) {
+                            _alphabetHandler.alphabet(text.getString(), (Alphabet)text.algorithm);
+                        }
+                        else {
                             char[] ca = text.getString().toCharArray();
                             _contentHandler.characters(ca, 0, ca.length);
                         }

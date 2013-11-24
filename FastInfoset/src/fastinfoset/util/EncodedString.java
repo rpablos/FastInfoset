@@ -32,12 +32,12 @@ public class EncodedString {
         AlgorithmIndex = -1;
         theData = null;
     }
-    public void setAlphabet(int index, String str) {
+    public void setAlphabet(int index, Algorithm algorithm, String str) {
         type = Type.Alphabet;
         theString = str;
         AlgorithmIndex = index;
         theData = null;
-        algorithm = null;
+        algorithm = algorithm;
     }
     public void setAlgorithm(int index, Algorithm algorithm, byte[] data) {
         type = Type.Algorithm;

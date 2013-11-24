@@ -338,7 +338,7 @@ public class Decoder {
             case FastInfosetConstants.ENCODED_CHARACTER_STRING_5TH_BIT_ALPHABET_DISCRIMINANT:
                 int index2 = decodeOctetInteger(7);
                 Algorithm algo2 = vocabulary.alphabets.get(index2);
-                encodedStringBuffer.setAlphabet(index2, algo2.fromByteArray(decodeNonEmptyOctetStringOnSeventhBit()));
+                encodedStringBuffer.setAlphabet(index2, algo2, algo2.fromByteArray(decodeNonEmptyOctetStringOnSeventhBit()));
                 return encodedStringBuffer;
         }
         throw new FastInfosetException();
@@ -360,7 +360,7 @@ public class Decoder {
             case FastInfosetConstants.ENCODED_CHARACTER_STRING_3RD_BIT_ALPHABET_DISCRIMINANT:
                 int index2 = decodeOctetInteger(5);
                 Algorithm algo2 = vocabulary.alphabets.get(index2);
-                encodedStringBuffer.setAlphabet(index2, algo2.fromByteArray(decodeNonEmptyOctetStringOnFifthBit()));
+                encodedStringBuffer.setAlphabet(index2, algo2, algo2.fromByteArray(decodeNonEmptyOctetStringOnFifthBit()));
                 return encodedStringBuffer;
         }
         throw new FastInfosetException();
