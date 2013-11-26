@@ -37,7 +37,7 @@ public class EncodedString {
         theString = str;
         AlgorithmIndex = index;
         theData = null;
-        algorithm = algorithm;
+        this.algorithm = algorithm;
     }
     public void setAlgorithm(int index, Algorithm algorithm, byte[] data) {
         type = Type.Algorithm;

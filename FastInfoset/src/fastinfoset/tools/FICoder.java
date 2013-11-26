@@ -7,6 +7,7 @@ package fastinfoset.tools;
 
 
 import fastinfoset.Algorithm.DataURL;
+import fastinfoset.SAX_FI_Decoder;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -59,10 +60,9 @@ public class FICoder {
        
        if (!decode) {
            OutputStream out = new BufferedOutputStream(new FileOutputStream(destino),1<<16);
-           //ByteArrayOutputStream out = new ByteArrayOutputStream();
+
            SAXParserFactory spf = SAXParserFactory.newInstance();
            spf.setNamespaceAware(true);
-           //spf.setFeature("http://xml.org/sax/features/external-general-entities", Boolean.FALSE);
            SAXParser sp = spf.newSAXParser();
            XMLReader xmlreader = sp.getXMLReader();
            SAX_FI_Encoder myhandler = new SAX_FI_Encoder();

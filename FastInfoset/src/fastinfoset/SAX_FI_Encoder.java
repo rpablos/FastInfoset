@@ -250,7 +250,12 @@ public class SAX_FI_Encoder extends Encoder implements ContentHandler, DTDHandle
 
     @Override
     public void alphabet(String str, Alphabet alphabet) throws SAXException {
-        object(str, alphabet);
+        if (str.isEmpty()) return;
+        try {
+            encodeCharacterChunk(str, alphabet);
+        } catch (IOException ex) {
+                throw new SAXException(ex);
+        }
     }
     
 }

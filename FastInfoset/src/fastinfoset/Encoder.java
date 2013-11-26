@@ -1069,7 +1069,7 @@ public class Encoder {
 
     protected void encodeElement(QName qname, List<Attribute> atts, List<NamespaceAttribute> nsatts) throws IOException {
         alignToOctet();
-        int attsSize = atts.size();
+        int attsSize = (atts == null)?0:atts.size();
         if (attsSize > 0) {
             current_octet |= FastInfosetConstants.ELEMENT_ATTRIBUTE_PRESENCE;
         }
