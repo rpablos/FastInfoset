@@ -123,6 +123,6 @@ Given the following XML document:
     
 The size of the XML document is <b>2120</b> octets.
 
-The size of the Fast Infoset is <b>743</b> octets witout using any extra optimization like algorithms, alphabets and external vocabularies.
+The size of the Fast Infoset is <b>743</b> octets without using any extra optimization like algorithms, alphabets or external vocabularies.
 
 The first one does not fit in a common 1500 octets IP packet. The second does.
