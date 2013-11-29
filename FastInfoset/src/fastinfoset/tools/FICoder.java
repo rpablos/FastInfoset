@@ -6,8 +6,9 @@
 package fastinfoset.tools;
 
 
-import fastinfoset.Algorithm.DataURL;
-import fastinfoset.SAX_FI_Decoder;
+import fastinfoset.SAX_FI_Encoder;
+import fastinfoset.sax.FastInfosetSource;
+import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -22,9 +23,6 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
-import fastinfoset.SAX_FI_Encoder;
-import java.io.BufferedInputStream;
-import fastinfoset.sax.FastInfosetSource;
 
 /**
  *
@@ -36,7 +34,6 @@ public class FICoder {
      * @param args the command line arguments
      */
     public static void main(String[] args) throws Exception {     
-        
        if (args.length < 2 || args.length > 3) {
            System.out.println("Uso: java -jar FastInfoset.jar [-d] <origen> <destino>");
            System.out.println("Por defecto, codifica un XML origen en un FastInfoset destino");

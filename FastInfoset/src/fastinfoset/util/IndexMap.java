@@ -40,9 +40,11 @@ public class IndexMap<K> extends /*HashMap<K, Integer>*/ HashMapObjectInt<K> imp
     public int addNewIndexEntry(K key, Algorithm algo) {
         if ((size() >= MAXIMUM_TABLE_ENTRIES) || ((allow != null) && !allow.isInsertionAllowed(key,algo)))
             return NO_INDEX;
-        if (put(key, index,false) != NO_INDEX)
-            return NO_INDEX;
-        return index++;
+        int result;
+        if ( (result=put(key, index,false)) == NOT_FOUND)
+            result = index; 
+        index++;
+        return result;
     }
     
     public void setAllowInsertion(AllowIndexMap<K> allow) {

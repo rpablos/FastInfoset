@@ -6,12 +6,16 @@ package fastinfoset.tools;
 import fastinfoset.Algorithm.Algorithm;
 import fastinfoset.Algorithm.Builtin.CDATA;
 import fastinfoset.Algorithm.Builtin.HEXADECIMAL;
+import fastinfoset.Alphabet.DateAndTime;
 import fastinfoset.Alphabet.Numeric;
 import fastinfoset.Document.Element.AlgorithmAttribute;
 import fastinfoset.Document.Element.Attribute;
 import fastinfoset.SAX_FI_Encoder;
+import fastinfoset.sax.FastInfosetSource;
 import fastinfoset.util.InitialVocabulary;
+import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -30,6 +34,9 @@ import java.util.regex.Pattern;
 import javax.xml.namespace.QName;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.stream.StreamResult;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -42,46 +49,67 @@ import org.xml.sax.XMLReader;
 public class TypedSAXEncoder extends SAX_FI_Encoder {
     
     static public void main(String args[]) throws  Exception {
-        if (args.length != 3) {
-            System.out.println("Uso: TypedSaxEncoder <config> <xml> <fi>");
+        if ((args.length < 3) || ((args.length == 4) && !args[0].equals("-d"))) {
+            System.out.println("Usage for encoding: TypedSaxEncoder <config> <xml> <fi>");
+            System.out.println("Usage for decoding: TypedSaxEncoder -d <config> <fi> <xml>");
             System.exit(0);
         }
-
+        boolean decode = args[0].equals("-d");
+        File config = new File(args[decode?1:0]);
+        File source = new File(args[decode?2:1]);
+        File destination = new File(args[decode?3:2]);
         Properties properties = new Properties();
-        properties.load(new FileInputStream(args[0]));
+        properties.load(new FileInputStream(config));
         InitialVocabulary externalVocabulary = new InitialVocabulary();
         String externalURI = (String) properties.get("EXTERNALURI");
         PopulateVocabulary((String)properties.get("EXTERNALLOCALNAMES"),externalVocabulary.localnames);
         PopulateVocabulary((String)properties.get("EXTERNALPREFIXES"),externalVocabulary.prefixes);
         PopulateVocabulary((String)properties.get("EXTERNALNAMESPACES"),externalVocabulary.namespaces);
-        InitialVocabulary initialVocabulary = new InitialVocabulary();
-        initialVocabulary.setExternalVocabulary(externalURI, externalVocabulary);
+        
         
         Map<QName,Algorithm> elementToalgorithm = new HashMap<QName,Algorithm>();
         PopulateMapWithAlgorithm((String) properties.get("NUMERICELEMENTS"), elementToalgorithm, Numeric.instance);
+        PopulateMapWithAlgorithm((String) properties.get("HEXADECIMALELEMENTS"), elementToalgorithm, HEXADECIMAL.instance);
+        PopulateMapWithAlgorithm((String) properties.get("DATETIMEELEMENTS"), elementToalgorithm, DateAndTime.instance);
         Map<QName,Algorithm> attributeToalgorithm = new HashMap<QName,Algorithm>();
         PopulateMapWithAlgorithm((String) properties.get("NUMERICATTRIBUTES"), attributeToalgorithm, Numeric.instance);
         PopulateMapWithAlgorithm((String) properties.get("HEXADECIMALATTRIBUTES"), attributeToalgorithm, HEXADECIMAL.instance);
+        PopulateMapWithAlgorithm((String) properties.get("DATETIMEATTRIBUTES"), attributeToalgorithm, DateAndTime.instance);
         Map<QName,Character> csvElements = new HashMap<QName,Character>();
         PopulateMapWithDelimiter((String) properties.get("CSVELEMENTS"),csvElements,',');
-        
-        OutputStream out = new BufferedOutputStream(new FileOutputStream(args[2]),1<<16);
-        SAXParserFactory spf = SAXParserFactory.newInstance();
-        spf.setNamespaceAware(true);
-        //spf.setFeature("http://xml.org/sax/features/namespace-prefixes", Boolean.TRUE);
-        SAXParser sp = spf.newSAXParser();
-        XMLReader xmlreader = sp.getXMLReader();
-        TypedSAXEncoder handler = new TypedSAXEncoder(elementToalgorithm,attributeToalgorithm,csvElements);
-        handler.setOutputStream(out);
-        handler.setMaximumChunkLengthForIndexing(60);
-        if (!initialVocabulary.isEmpty())
-            handler.setInitialVocabulary(initialVocabulary);
-        xmlreader.setContentHandler(handler);
-        xmlreader.setDTDHandler(handler);
-        xmlreader.setProperty("http://xml.org/sax/properties/lexical-handler", handler);
-        long time = System.currentTimeMillis();
-        xmlreader.parse(new InputSource(new FileInputStream(args[1])));
-        System.out.println("Tiempo: "+(System.currentTimeMillis()-time)+" ms"); 
+        PopulateMapWithDelimiter((String) properties.get("SEMICOLONELEMENTS"),csvElements,';');
+        PopulateMapWithDelimiter((String) properties.get("COLONELEMENTS"),csvElements,':');
+        if (!decode) {
+            InitialVocabulary initialVocabulary = new InitialVocabulary();
+            initialVocabulary.setExternalVocabulary(externalURI, externalVocabulary);
+            OutputStream out = new BufferedOutputStream(new FileOutputStream(destination),1<<16);
+            SAXParserFactory spf = SAXParserFactory.newInstance();
+            spf.setNamespaceAware(true);
+            SAXParser sp = spf.newSAXParser();
+            XMLReader xmlreader = sp.getXMLReader();
+            TypedSAXEncoder handler = new TypedSAXEncoder(elementToalgorithm,attributeToalgorithm,csvElements);
+            handler.setOutputStream(out);
+            handler.setMaximumChunkLengthForIndexing(60);
+            if (!initialVocabulary.isEmpty())
+                handler.setInitialVocabulary(initialVocabulary);
+            xmlreader.setContentHandler(handler);
+            xmlreader.setDTDHandler(handler);
+            xmlreader.setProperty("http://xml.org/sax/properties/lexical-handler", handler);
+            long time = System.currentTimeMillis();
+            xmlreader.parse(new InputSource(new FileInputStream(source)));
+            System.out.println("Time: "+(System.currentTimeMillis()-time)+" ms"); 
+        } else {
+            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            Transformer transformer = transformerFactory.newTransformer();
+            FastInfosetSource fisource = new FastInfosetSource(new BufferedInputStream(new FileInputStream(source)));
+            Map<String, InitialVocabulary> externalVocabularies = new HashMap<String, InitialVocabulary>();
+            externalVocabularies.put(externalURI, externalVocabulary);
+            fisource.getFastInfosetDecoder().registerExternalVocabularies(externalVocabularies);
+            StreamResult result = new StreamResult(destination);
+            long time = System.currentTimeMillis();
+            transformer.transform(fisource, result);
+            System.out.println("Time: "+(System.currentTimeMillis()-time)+" ms with SAX transform");
+        }
     }
     private static final Pattern pattern = Pattern.compile("\\s*([^\\s\\{\\}]*)(?:\\{(.*)\\})?\\s*");
     static private QName getQName(String str) {
