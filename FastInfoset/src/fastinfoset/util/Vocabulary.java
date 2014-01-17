@@ -104,7 +104,10 @@ public class Vocabulary extends BuiltinVocabulary {
 //    public Vocabulary(InitialVocabulary initialVocabulary) {
 //        this(initialVocabulary,true);
 //    }
-    
+    public Vocabulary(InitialVocabulary initialVocabulary, int maxChunkLength) {
+        this(initialVocabulary);
+        MAXIMUM_CHUNK_LENGTH = maxChunkLength;
+    }
     public Vocabulary(InitialVocabulary initialVocabulary/*, boolean createInternal*/) {
         this.initialVocabulary = initialVocabulary;
         addBuiltinEntries();

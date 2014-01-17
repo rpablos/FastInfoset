@@ -60,7 +60,7 @@ public class Encoder {
         vocabulary.MAXIMUM_CHUNK_LENGTH = length;
     }
     public void setInitialVocabulary(InitialVocabulary initialVocabulary) {
-        vocabulary = new Vocabulary(initialVocabulary);
+        vocabulary = new Vocabulary(initialVocabulary,vocabulary.MAXIMUM_CHUNK_LENGTH);
     }
     public InitialVocabulary getDynamicGeneratedVocabularyAsInitial() {
         return vocabulary.toInitialVocabulary();

@@ -60,6 +60,13 @@ public class TypedSAXEncoder extends SAX_FI_Encoder {
         File destination = new File(args[decode?3:2]);
         Properties properties = new Properties();
         properties.load(new FileInputStream(config));
+        String maxChunkLenStr = (String) properties.get("MAXIMUMCHUNKLENGTH");
+        int maxChunkLen = -1;
+        try {
+            maxChunkLen = Integer.parseInt(maxChunkLenStr);
+        } catch (Exception e) {}
+        if (maxChunkLen < 0)
+            maxChunkLen = 60;
         InitialVocabulary externalVocabulary = new InitialVocabulary();
         String externalURI = (String) properties.get("EXTERNALURI");
         PopulateVocabulary((String)properties.get("EXTERNALLOCALNAMES"),externalVocabulary.localnames);
@@ -89,9 +96,10 @@ public class TypedSAXEncoder extends SAX_FI_Encoder {
             XMLReader xmlreader = sp.getXMLReader();
             TypedSAXEncoder handler = new TypedSAXEncoder(elementToalgorithm,attributeToalgorithm,csvElements);
             handler.setOutputStream(out);
-            handler.setMaximumChunkLengthForIndexing(60);
+            handler.setMaximumChunkLengthForIndexing(maxChunkLen);
             if (!initialVocabulary.isEmpty())
                 handler.setInitialVocabulary(initialVocabulary);
+            
             xmlreader.setContentHandler(handler);
             xmlreader.setDTDHandler(handler);
             xmlreader.setProperty("http://xml.org/sax/properties/lexical-handler", handler);
