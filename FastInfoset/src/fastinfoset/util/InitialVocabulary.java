@@ -53,7 +53,8 @@ public class InitialVocabulary {
         if (    !prefixes.isEmpty() || !namespaces.isEmpty() || !localnames.isEmpty() ||
                 !other_ncnames.isEmpty() || !other_uris.isEmpty() || !attribute_values.isEmpty() ||
                 !character_chunks.isEmpty() || !other_strings.isEmpty() ||
-                !elementnames.isEmpty() || !attributenames.isEmpty()
+                !elementnames.isEmpty() || !attributenames.isEmpty() ||
+                !algorithms.isEmpty() || !alphabets.isEmpty()
            )
             return false;
         return true;

@@ -144,7 +144,7 @@ public class Encoder {
             encodeIndexOnSecondbit(index);
         } else {
             //encodeNonEmptyOctetStringOnSecondBit(str.getBytes(utf8CharSet));
-            int len = encodeUTFinInternalEncodingBuffer(str);
+            int len = encodeUTF8inInternalEncodingBuffer(str);
             encodeNonEmptyOctetStringOnSecondBit(_encodingBuffer, 0, len);
 //            encodeUTFinInternalEncodingBuffer(str, utfEncoder);
 //            encodeNonEmptyOctetStringOnSecondBit(internalEncodingBuffer.getInternalByteArray(), 0, internalEncodingBuffer.size());
@@ -689,7 +689,7 @@ public class Encoder {
     protected void encodeAdditionalData(List<Additional_datum> additional_data) throws IOException {
         encodeSequenceOfLength(additional_data.size());
         for (Additional_datum additional_datum : additional_data) {
-            int len = encodeUTFinInternalEncodingBuffer(additional_datum.getId());
+            int len = encodeUTF8inInternalEncodingBuffer(additional_datum.getId());
             encodeNonEmptyOctetStringOnSecondBit(_encodingBuffer, 0, len);
             encodeNonEmptyOctetStringOnSecondBit(additional_datum.getData());
         }
@@ -731,7 +731,13 @@ public class Encoder {
 //    }
     byte[] _encodingBuffer = new byte[1024];
     char[] _charBuffer = new char[1024];
+    protected int encodeUTF8inInternalEncodingBuffer(String str) throws IOException {
+         return encodeUTFinInternalEncodingBuffer(str,true);
+    }
     protected int encodeUTFinInternalEncodingBuffer(String str) throws IOException {
+         return encodeUTFinInternalEncodingBuffer(str,utf8encoding);
+    }
+    protected int encodeUTFinInternalEncodingBuffer(String str,boolean utf8encoding) throws IOException {
         final int length = str.length();
             if (length < _charBuffer.length) {
                 str.getChars(0, length, _charBuffer, 0);
@@ -883,7 +889,7 @@ public class Encoder {
         current_octet = mascara2;
         flush_currentoctet(); // segunda parte de la mascara de opciones
         if ((mascara1 & FastInfosetConstants.INITIAL_VOCABULARY_EXTERNAL_VOCABULARY) != 0) {
-            int len = encodeUTFinInternalEncodingBuffer(externalURI);
+            int len = encodeUTF8inInternalEncodingBuffer(externalURI);
             encodeNonEmptyOctetStringOnSecondBit(_encodingBuffer, 0, len);
         }
         if ((mascara1 & FastInfosetConstants.INITIAL_VOCABULARY_ALPHABETS) != 0) {
@@ -927,14 +933,14 @@ public class Encoder {
     protected void encodeAlphabetVocabularyTable(List<Alphabet> table) throws IOException {
         encodeSequenceOfLength(table.size());
         for (Alphabet alphabet : table) {
-            int len = encodeUTFinInternalEncodingBuffer(alphabet.toString());
+            int len = encodeUTF8inInternalEncodingBuffer(alphabet.toString());
             encodeNonEmptyOctetStringOnSecondBit(_encodingBuffer, 0, len);
         }
     }
     protected void encodeAlgorithmVocabularyTable(List<Algorithm> table) throws IOException {
         encodeSequenceOfLength(table.size());
         for (Algorithm algo : table) {
-            int len = encodeUTFinInternalEncodingBuffer(algo.getURI());
+            int len = encodeUTF8inInternalEncodingBuffer(algo.getURI());
             encodeNonEmptyOctetStringOnSecondBit(_encodingBuffer, 0, len);
         }
     }
@@ -956,13 +962,13 @@ public class Encoder {
     protected void encodeNonEmptyOctetStringVocabularyTable(List<String> table) throws IOException {
         encodeSequenceOfLength(table.size());
         for (String str : table) {
-            int len = encodeUTFinInternalEncodingBuffer(str);
+            int len = encodeUTF8inInternalEncodingBuffer(str);
             encodeNonEmptyOctetStringOnSecondBit(_encodingBuffer, 0, len);
         }
     }
 
     protected void encodeDocumentCharEncoding(String xmlEncoding) throws IOException {
-        int len = encodeUTFinInternalEncodingBuffer(xmlEncoding);
+        int len = encodeUTF8inInternalEncodingBuffer(xmlEncoding);
         encodeNonEmptyOctetStringOnSecondBit(_encodingBuffer, 0, len);
     }
 
@@ -996,7 +1002,7 @@ public class Encoder {
     }
     protected void encodeHeader(String XMLEncoding, boolean standalone, String XMLVersion, List<UnparsedEntity> unparsedEntities, List<Notation> notations) throws IOException {
         if (xlmDeclaration) {
-            int len = encodeUTFinInternalEncodingBuffer("<?xml " + ((!encodeXMLVersion || XMLVersion == null) ? "" : "version='" + XMLVersion + "' ") + "encoding='finf'" + ((encodeStandalone) ? " standalone=" + (standalone ? "'yes'" : "'no'") : "") + "?>");
+            int len = encodeUTF8inInternalEncodingBuffer("<?xml " + ((!encodeXMLVersion || XMLVersion == null) ? "" : "version='" + XMLVersion + "' ") + "encoding='finf'" + ((encodeStandalone) ? " standalone=" + (standalone ? "'yes'" : "'no'") : "") + "?>");
             _out.write(_encodingBuffer, 0, len);
         }
         _out.write(FastInfosetConstants.FastInfosetIdentificacion); //E0 00
