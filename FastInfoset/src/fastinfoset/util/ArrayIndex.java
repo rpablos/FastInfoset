@@ -65,5 +65,10 @@ public class ArrayIndex<T> implements Cloneable {
         return result;
     }
     
+    public void ensureCapacity(int capacity) {
+        if (capacity <= array.length)
+            return;
+        resize(capacity);
+    }
     
 }

@@ -368,6 +368,7 @@ public class Decoder {
 
     protected void decodeEncodedCharacterStringVocabularyTable(ArrayIndex<String> table) throws IOException, FastInfosetException {
         int len = decodeSequenceOfLength();
+        table.ensureCapacity(len);
         for (int i = 0; i < len; i++) {
             read();
             table.add(decodeEncodedCharacterStringOnThirdbit().getString());
@@ -557,6 +558,7 @@ public class Decoder {
 
     protected void decodeNameSurrogateVocabularyTable(ArrayIndex<Name_surrogate> table) throws IOException {
         int len = decodeSequenceOfLength();
+        table.ensureCapacity(len);
         for (int i = 0; i < len; i++) {
             read();
             table.add(decodeNameSurrogateOnSeventhBit());
@@ -573,6 +575,7 @@ public class Decoder {
 
     protected void decodeNonEmptyOctetStringVocabularyTable(ArrayIndex<String> table) throws IOException {
         int len = decodeSequenceOfLength();
+        table.ensureCapacity(len);
         for (int i = 0; i < len; i++) {
             read();
             table.add(decodeUTF8inInternalEncodingBufferAsString(decodeNonEmptyOctetStringOnSecondBit()));
@@ -688,6 +691,7 @@ public class Decoder {
 
     protected void decodeAlgorithmVocabularyTable(ArrayIndex<Algorithm> table) throws IOException {
         int len = decodeSequenceOfLength();
+        table.ensureCapacity(len);
         for (int i = 0; i < len; i++) {
             read();
             String algorithmURI = decodeUTF8inInternalEncodingBufferAsString(decodeNonEmptyOctetStringOnSecondBit());
@@ -697,6 +701,7 @@ public class Decoder {
 
     protected void decodeAlphabetVocabularyTable(ArrayIndex<Alphabet> table) throws IOException {
         int len = decodeSequenceOfLength();
+        table.ensureCapacity(len);
         for (int i = 0; i < len; i++) {
             read();
             table.add(new Alphabet(decodeUTF8inInternalEncodingBufferAsString(decodeNonEmptyOctetStringOnSecondBit())));

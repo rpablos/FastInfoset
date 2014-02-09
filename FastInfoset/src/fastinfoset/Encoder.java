@@ -62,7 +62,7 @@ public class Encoder {
     public void setInitialVocabulary(InitialVocabulary initialVocabulary) {
         vocabulary = new Vocabulary(initialVocabulary,vocabulary.MAXIMUM_CHUNK_LENGTH);
     }
-    public InitialVocabulary getDynamicGeneratedVocabularyAsInitial() {
+    public InitialVocabulary getDynamicallyGeneratedVocabularyAsInitial() {
         return vocabulary.toInitialVocabulary();
     }
     public InitialVocabulary getAllVocabularyAsInitial() {
@@ -1008,7 +1008,7 @@ public class Encoder {
         _out.write(FastInfosetConstants.FastInfosetIdentificacion); //E0 00
         _out.write(FastInfosetConstants.FastInfosetVersion); //00 01
         int mascara = 0;
-        if (additional_data != null) {
+        if ((additional_data != null) && (!additional_data.isEmpty())) {
             mascara |= FastInfosetConstants.DOCUMENT_ADDITIONAL_DATA_FLAG;
         }
         if ((vocabulary.getInitialVocabulary() != null) && (!vocabulary.getInitialVocabulary().isEmpty())) {
