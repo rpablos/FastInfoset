@@ -248,6 +248,8 @@ public class Vocabulary extends BuiltinVocabulary {
     }
 
     private void populateAlgorithmURIs() {
+        if (initialVocabulary == null)
+            return;
         for (Algorithm algo: initialVocabulary.algorithms) {
             if (algo.getURI() != null) {
                 algorithmURIs.put(algo.getURI(), algorithms.get(algo));
