@@ -95,7 +95,7 @@ public class Vocabulary extends BuiltinVocabulary {
     public IndexMap<Name_surrogate> elementname = new IndexMap<Name_surrogate>(INITIAL_CAPACITY_ELEMENTNAME);
     public IndexMap<Name_surrogate> attributename = new IndexMap<Name_surrogate>(INITIAL_CAPACITY_ATTRIBUTENAME);
 
-    
+    public HashMapObjectInt<String> algorithmURIs = new HashMapObjectInt<String>(INITIAL_CAPACITY_ALGORITHMS); 
     
     public Vocabulary() {
         this(null);
@@ -113,6 +113,7 @@ public class Vocabulary extends BuiltinVocabulary {
         addBuiltinEntries();
         addInitialVocabulary(initialVocabulary);
         character_chunks.setAllowInsertion(new AllowLimitedStringLenghts());
+        populateAlgorithmURIs();
 //        if (createInternal) {
             internalInitialVocabulary = new InternalInitialVocabulary();
             
@@ -244,6 +245,14 @@ public class Vocabulary extends BuiltinVocabulary {
         elementname = (IndexMap<Name_surrogate>) internalInitialVocabulary.elementname.clone();
         attributename =  (IndexMap<Name_surrogate>) internalInitialVocabulary.attributename.clone();
         
+    }
+
+    private void populateAlgorithmURIs() {
+        for (Algorithm algo: initialVocabulary.algorithms) {
+            if (algo.getURI() != null) {
+                algorithmURIs.put(algo.getURI(), algorithms.get(algo));
+            }
+        }
     }
     class AllowLimitedStringLenghts implements AllowIndexMap<String> {
 

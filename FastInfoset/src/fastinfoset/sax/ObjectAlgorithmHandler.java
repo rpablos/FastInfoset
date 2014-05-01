@@ -19,6 +19,9 @@ public interface ObjectAlgorithmHandler {
      * Otherwise, the object method is called
      * @param data encoded data
      * @param algorithmId index for the algorithm
+     * @throws org.xml.sax.SAXException
      */
     public void object(byte[] data, int algorithmId) throws SAXException;
+    
+    public void object(byte[] data, String uri) throws SAXException;
 }

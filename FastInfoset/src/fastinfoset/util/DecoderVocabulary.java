@@ -36,6 +36,8 @@ public class DecoderVocabulary extends BuiltinVocabulary {
         attribute_values,character_chunks,other_strings,elementnames, attributenames };
     int[] internalInitialindexes = new int[internalTables.length];
 
+    String[] algorithmsURIs = new String[256];
+    
     public DecoderVocabulary() {
         this(null);
     }
@@ -90,5 +92,11 @@ public class DecoderVocabulary extends BuiltinVocabulary {
         reset();
         addInitialVocabulary(external);
     }
-    
+    public void setAlgorithmURI(String uri, int index) {
+        if (index >= 0 && index < algorithmsURIs.length)
+            algorithmsURIs[index] = uri;
+    }
+    public String getAlgorithmURI(int index) {
+        return (index >= 0 && index < algorithmsURIs.length)?algorithmsURIs[index]:null;
+    }
 }

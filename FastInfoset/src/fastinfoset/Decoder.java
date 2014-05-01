@@ -332,7 +332,7 @@ public class Decoder {
                 return encodedStringBuffer;
             case FastInfosetConstants.ENCODED_CHARACTER_STRING_5TH_BIT_ALGORITHM_DISCRIMINANT:
                 int index = decodeOctetInteger(7);
-                Algorithm algo = vocabulary.algorithms.get(index);
+                Algorithm algo = vocabulary.algorithms.getNullIfNotFound(index);
                 encodedStringBuffer.setAlgorithm(index, algo, decodeNonEmptyOctetStringOnSeventhBit());
                 return encodedStringBuffer;
             case FastInfosetConstants.ENCODED_CHARACTER_STRING_5TH_BIT_ALPHABET_DISCRIMINANT:
@@ -695,10 +695,11 @@ public class Decoder {
         for (int i = 0; i < len; i++) {
             read();
             String algorithmURI = decodeUTF8inInternalEncodingBufferAsString(decodeNonEmptyOctetStringOnSecondBit());
-            table.add(registredAlgorithms.get(algorithmURI));
+            int index = table.add(registredAlgorithms.get(algorithmURI));
+            vocabulary.setAlgorithmURI(algorithmURI,index);
         }
     }
-
+  
     protected void decodeAlphabetVocabularyTable(ArrayIndex<Alphabet> table) throws IOException {
         int len = decodeSequenceOfLength();
         table.ensureCapacity(len);

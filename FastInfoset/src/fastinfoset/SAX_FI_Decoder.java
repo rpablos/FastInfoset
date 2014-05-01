@@ -321,8 +321,13 @@ public class SAX_FI_Decoder extends Decoder implements XMLReader {
                     }
                     else {
                         if ((_objectAlgorithmHandler != null) && (text.type.equals(text.type.Algorithm))) {
-                            if (text.algorithm == null)
-                                _objectAlgorithmHandler.object(text.theData, text.AlgorithmIndex);
+                            if (text.algorithm == null) {
+                                String uri = vocabulary.getAlgorithmURI(text.AlgorithmIndex);
+                                if (uri == null)
+                                    _objectAlgorithmHandler.object(text.theData, text.AlgorithmIndex);
+                                else
+                                    _objectAlgorithmHandler.object(text.theData, uri);
+                            }
                             else
                                 _objectAlgorithmHandler.object(text.algorithm.objectFromByteArray(text.theData), text.algorithm);
                         } else if ((_alphabetHandler != null) && (text.type.equals(text.type.Alphabet))) {

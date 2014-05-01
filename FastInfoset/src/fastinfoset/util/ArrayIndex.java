@@ -44,7 +44,10 @@ public class ArrayIndex<T> implements Cloneable {
             throw new fastinfoset.FastInfosetException(ex);
         }
     }
-
+    
+    public T getNullIfNotFound(int index) throws FastInfosetException {
+        return (index >= 0 || index < size)?(T) array[index]:null;
+    }
 
     public int getSize() {
         return size;

@@ -26,7 +26,9 @@ public class AlgorithmAttribute extends Attribute {
         this.object = object;
         this.algo = algo;
     }
-
+    public Object getDataObject() {
+        return object;
+    }
     public Algorithm getAlgorithm() {
         return algo;
     }

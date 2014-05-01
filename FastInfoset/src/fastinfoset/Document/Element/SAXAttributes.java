@@ -105,9 +105,11 @@ public class SAXAttributes implements Attributes,FastInfosetAttributes {
         return null;
     }
 
+    @Override
     public boolean isAlgorithmEncodedAttribute(int index) {
         return attList.get(index) instanceof AlgorithmAttribute;
     }
+    @Override
     public Object getAlgorithmObject(int index) {
         Attribute att = attList.get(index);
         if (att instanceof AlgorithmAttribute) {
@@ -116,6 +118,7 @@ public class SAXAttributes implements Attributes,FastInfosetAttributes {
             return null;
     }
 
+    @Override
     public List<Attribute> getAttributes() {
         return attList;
     }
