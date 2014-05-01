@@ -1,7 +1,6 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+//  Author: Ronald Pablos
+//  Year: 2013
+
 package fastinfoset.sax;
 
 import fastinfoset.Alphabet.Alphabet;

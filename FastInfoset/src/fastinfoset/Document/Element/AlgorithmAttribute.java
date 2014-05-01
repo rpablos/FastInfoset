@@ -4,8 +4,6 @@
 package fastinfoset.Document.Element;
 
 import fastinfoset.Algorithm.Algorithm;
-import fastinfoset.Algorithm.EncodingAlgorithmException;
-import fastinfoset.util.EncodedString;
 import javax.xml.namespace.QName;
 
 /**

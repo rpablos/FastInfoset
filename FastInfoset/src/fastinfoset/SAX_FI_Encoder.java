@@ -16,7 +16,6 @@ import fastinfoset.Document.ProcessingInstruction;
 import fastinfoset.Document.UnparsedEntity;
 import fastinfoset.sax.AlphabetHandler;
 import fastinfoset.sax.ObjectAlgorithmHandler;
-import fastinfoset.util.HashMapObjectInt;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -252,7 +251,7 @@ public class SAX_FI_Encoder extends Encoder implements ContentHandler, DTDHandle
     @Override
     public void object(byte[] data, String uri) throws SAXException {
         try {
-            encodeObjectCharacterChunk(data, getAlgorithmIdFromURI(uri));
+            encodeObjectCharacterChunk(data, vocabulary.algorithmURIs.get(uri));
         } catch (IOException ex) {
                 throw new SAXException(ex);
         }
@@ -268,8 +267,4 @@ public class SAX_FI_Encoder extends Encoder implements ContentHandler, DTDHandle
         }
     }
 
-    private int getAlgorithmIdFromURI(String uri) {
-        return vocabulary.algorithmURIs.get(uri);
-    }
-    
 }
