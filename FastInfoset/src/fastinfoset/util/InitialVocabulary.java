@@ -7,9 +7,7 @@ import fastinfoset.Algorithm.Algorithm;
 import fastinfoset.Alphabet.Alphabet;
 import fastinfoset.Document.Name_surrogate;
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  *

@@ -3,8 +3,6 @@
 
 package fastinfoset.Document;
 
-import fastinfoset.Document.Notation;
-
 /**
  *
  * @author rpablos

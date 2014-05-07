@@ -5,10 +5,10 @@ package fastinfoset.Algorithm.Builtin;
 
 import fastinfoset.Algorithm.Algorithm;
 import fastinfoset.Algorithm.EncodingAlgorithmException;
-import fastinfoset.FastInfosetException;
 
 /**
- *
+ * Algorithm for transforming a <code>byte[]</code> into its hexadecimal string 
+ * representation and viceversa.
  * @author rpablos
  */
 public class HEXADECIMAL extends Algorithm {

@@ -4,7 +4,6 @@
 package fastinfoset.Alphabet;
 
 import fastinfoset.Algorithm.EncodingAlgorithmException;
-import fastinfoset.FastInfosetException;
 
 /**
  *

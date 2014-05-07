@@ -4,7 +4,6 @@
 package fastinfoset.tools;
 
 import fastinfoset.Algorithm.Algorithm;
-import fastinfoset.Algorithm.Builtin.CDATA;
 import fastinfoset.Algorithm.Builtin.HEXADECIMAL;
 import fastinfoset.Alphabet.DateAndTime;
 import fastinfoset.Alphabet.Numeric;
@@ -17,17 +16,14 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

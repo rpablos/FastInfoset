@@ -4,28 +4,19 @@
 package fastinfoset.util;
 
 import fastinfoset.Algorithm.Algorithm;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 import fastinfoset.FastInfosetConstants;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
  * @author rpablos
  */
-public class IndexMap<K> extends /*HashMap<K, Integer>*/ HashMapObjectInt<K> implements Cloneable {
+public class IndexMap<K> extends HashMapObjectInt<K> implements Cloneable {
     int MAXIMUM_TABLE_ENTRIES = FastInfosetConstants.MAXIMUM_TABLE_ENTRIES;
     AllowIndexMap<K> allow = null;
     int index = 0;
-    //IndexMap<K> initialIndexMap = null;
+  
     
     public IndexMap(int initialCapacity) {
         super(initialCapacity);
@@ -51,30 +42,12 @@ public class IndexMap<K> extends /*HashMap<K, Integer>*/ HashMapObjectInt<K> imp
         this.allow = allow;
     }
 
-//    void setInitialIndexMap(IndexMap<K> initialIndexMap) {
-//        if (initialIndexMap.size() > 0) {
-//            this.initialIndexMap = initialIndexMap;
-//            this.index = initialIndexMap.index;
-//        }
-//    }
-
-//    @Override
-//    public Integer get(Object key) {
-//        Integer result = null;
-//        if (initialIndexMap != null)
-//            result = initialIndexMap.get(key);
-//        return (result != null)?result:super.get(key);
-//    }
     @Override
     public int get(Object key) {
         return get(key,null);
     }
     
     public int get(Object key, Algorithm algo) {
-//        int result = HashMapObjectInt.NOT_FOUND;
-//        if (initialIndexMap != null)
-//            result = initialIndexMap.get(key);
-//        return (result != HashMapObjectInt.NOT_FOUND)?result:super.get(key);
         if ((allow != null) && !allow.isObtentionAllowed(algo))
                 return NO_INDEX;
         return super.get(key);
@@ -84,7 +57,6 @@ public class IndexMap<K> extends /*HashMap<K, Integer>*/ HashMapObjectInt<K> imp
     public void clear() {
         super.clear();
         index  = 0;
-//        index = (initialIndexMap ==null)?0:initialIndexMap.index;
     }
 
     @Override
@@ -97,25 +69,6 @@ public class IndexMap<K> extends /*HashMap<K, Integer>*/ HashMapObjectInt<K> imp
     }
     
     
-//    public K[] getKeysInOrder(K[] k) {
-//        Set<Map.Entry<K,Integer>> entries = entrySet();
-//        Map.Entry<K,Integer>[] list = entries.toArray(new Map.Entry[0]);
-//        Arrays.sort(list, new Comparator<Map.Entry<K,Integer>>() {
-//
-//            @Override
-//            public int compare(Map.Entry<K, Integer> o1, Map.Entry<K, Integer> o2) {
-//                return o1.getValue().intValue() - o2.getValue().intValue();
-//            }
-//        });
-//        K[] result = (k.length >= list.length)?
-//                k:(K[]) java.lang.reflect.Array.newInstance(k.getClass().getComponentType(), list.length);
-//        int i;
-//        for (i = 0; i< list.length; i++)
-//            result[i] = list[i].getKey();
-//        if (i < result.length)
-//            result[i] = null;
-//        return result;
-//    }
     public K[] getKeysInOrder(K[] k) {
         return getKeysInOrder(k,0);
     }

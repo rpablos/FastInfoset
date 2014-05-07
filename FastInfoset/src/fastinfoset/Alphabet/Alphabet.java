@@ -5,14 +5,19 @@ package fastinfoset.Alphabet;
 
 import fastinfoset.Algorithm.Algorithm;
 import fastinfoset.Algorithm.EncodingAlgorithmException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 /**
+ * An alphabet is ordered string of unique characters. There are not repeated characters.
  *
+ * <p>A character string can be encoded more efficiently with an alphabet.
+ * Each character in the character string shall be converted to an integer, 
+ * which is the position of the character within alphabet.
+ * 
+ * <p>This class fully covers the Unicade character set
+ * 
  * @author rpablos
  */
 public class Alphabet extends Algorithm {

@@ -4,7 +4,9 @@
 package fastinfoset.Alphabet;
 
 /**
- *
+ * Alphabet for representing dates and times.
+ * 
+ * <p>This alphabet is "0123456789-:TZ "
  * @author rpablos
  */
 public class DateAndTime extends Alphabet {

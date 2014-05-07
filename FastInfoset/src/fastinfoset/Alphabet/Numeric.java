@@ -4,7 +4,9 @@
 package fastinfoset.Alphabet;
 
 /**
- *
+ * Alphabet for representing numeric character strings.
+ * 
+ * <p>This alphabet is "0123456789-+.e "
  * @author rpablos
  */
 public class Numeric extends Alphabet {

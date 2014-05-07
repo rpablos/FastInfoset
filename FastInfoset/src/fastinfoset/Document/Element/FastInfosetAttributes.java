@@ -3,7 +3,6 @@
 
 package fastinfoset.Document.Element;
 
-import fastinfoset.util.EncodedString;
 import java.util.List;
 
 /**

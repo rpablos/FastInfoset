@@ -3,7 +3,6 @@
 
 package fastinfoset.Document.Element;
 
-import fastinfoset.Algorithm.EncodingAlgorithmException;
 import java.util.LinkedList;
 import java.util.List;
 import javax.xml.XMLConstants;

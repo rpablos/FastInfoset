@@ -77,6 +77,7 @@ public class FrequencyAnalyzer {
             int pos = qname.indexOf(':');
             return (pos > 0)?qname.substring(0, pos):"";
         }
+        
         public <T> void printFrequency(String title, Map<T, IntegerHolder> map) {
             Map.Entry<T,IntegerHolder>[] entryArray = map.entrySet().toArray(new Entry[0]);
             Arrays.sort(entryArray,new Comparador<T>());

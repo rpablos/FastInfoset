@@ -5,26 +5,11 @@ package fastinfoset.util;
 
 import fastinfoset.Document.Name_surrogate;
 import fastinfoset.Algorithm.Algorithm;
-import fastinfoset.Algorithm.Builtin.BASE64;
-import fastinfoset.Algorithm.Builtin.BOOLEAN;
 import fastinfoset.Algorithm.Builtin.CDATA;
-import fastinfoset.Algorithm.Builtin.DOUBLE;
-import fastinfoset.Algorithm.Builtin.FLOAT;
-import fastinfoset.Algorithm.Builtin.HEXADECIMAL;
-import fastinfoset.Algorithm.Builtin.INT;
-import fastinfoset.Algorithm.Builtin.LONG;
-import fastinfoset.Algorithm.Builtin.SHORT;
-import fastinfoset.Algorithm.Builtin.UUID;
 import fastinfoset.Alphabet.Alphabet;
-import fastinfoset.Alphabet.DateAndTime;
-import fastinfoset.Alphabet.Numeric;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
-import fastinfoset.FastInfosetConstants;
 
 /**
  *

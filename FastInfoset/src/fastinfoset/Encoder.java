@@ -3,23 +3,15 @@
 
 package fastinfoset;
 
-import java.io.ByteArrayOutputStream;
 import fastinfoset.Algorithm.Algorithm;
 import fastinfoset.Algorithm.EncodingAlgorithmException;
 import fastinfoset.Alphabet.Alphabet;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.nio.ByteBuffer;
-import java.nio.CharBuffer;
-import java.nio.charset.Charset;
-import java.nio.charset.CharsetEncoder;
-import java.nio.charset.CoderResult;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.annotation.processing.ProcessingEnvironment;
 import javax.xml.namespace.QName;
-import javax.xml.stream.events.ProcessingInstruction;
 import fastinfoset.Document.Additional_datum;
 import fastinfoset.Document.Element.Attribute;
 import fastinfoset.Document.Element.NamespaceAttribute;
@@ -32,8 +24,6 @@ import fastinfoset.Document.Notation;
 import fastinfoset.Document.UnparsedEntity;
 import fastinfoset.util.HashMapObjectInt;
 import fastinfoset.util.Vocabulary;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -143,11 +133,8 @@ public class Encoder {
             current_octet |= FastInfosetConstants.IDENTIFYINGSTRINGORINDEX_INDEX;
             encodeIndexOnSecondbit(index);
         } else {
-            //encodeNonEmptyOctetStringOnSecondBit(str.getBytes(utf8CharSet));
             int len = encodeUTF8inInternalEncodingBuffer(str);
             encodeNonEmptyOctetStringOnSecondBit(_encodingBuffer, 0, len);
-//            encodeUTFinInternalEncodingBuffer(str, utfEncoder);
-//            encodeNonEmptyOctetStringOnSecondBit(internalEncodingBuffer.getInternalByteArray(), 0, internalEncodingBuffer.size());
             index = map.addNewIndexEntry(str);
         }
         return index;
@@ -270,27 +257,26 @@ public class Encoder {
             int len = encodeUTFinInternalEncodingBuffer(str);
             encodeNonEmptyOctetStringOnFifthBit(_encodingBuffer, 0, len);
         } else {
-            int algo_index = HashMapObjectInt.NOT_FOUND;
-            if (algo instanceof Alphabet) {
-                current_octet |= FastInfosetConstants.ENCODED_CHARACTER_STRING_3RD_BIT_ALPHABET_DISCRIMINANT;
-                algo_index = vocabulary.alphabets.get(algo);
-            } else {
-                current_octet |= FastInfosetConstants.ENCODED_CHARACTER_STRING_3RD_BIT_ALGORITHM_DISCRIMINANT;
-                algo_index = vocabulary.algorithms.get(algo);
-            }
-            
-            if (algo_index == HashMapObjectInt.NOT_FOUND)
-                throw new IOException("algorithm not found");
-            encodeOctetInteger(algo_index, 5);
             try {
-                encodeNonEmptyOctetStringOnFifthBit(algo.toByteArray(str));
+                encodeAlgorithm(algo.toByteArray(str), algo, 3);
             } catch (EncodingAlgorithmException ex) {
                 throw new IOException(ex);
             }
         }
 
     }
-
+    protected void encodeObjectEncodedCharacterStringOnThirdbit(Object object, Algorithm algo) throws IOException {
+        if (algo == null){
+            throw new IOException("No encoding algorithm");
+        } else {
+            try {
+                encodeAlgorithm(algo.toByteArray(object), algo, 3);
+            } catch (EncodingAlgorithmException ex) {
+                throw new IOException(ex);
+            }
+        }
+    }
+    
     //c.4
     protected void encodeAttributes(List<Attribute> attributes) throws IOException {
         if(attributes == null)
@@ -298,9 +284,16 @@ public class Encoder {
         for (Attribute att : attributes) {
             encodeQualifiedNameOrIndexOnSecondBit(att.getQualified_name());
             Algorithm algo = null;
-            if (att instanceof AlgorithmAttribute)
-                algo = ((AlgorithmAttribute)att).getAlgorithm();
-            encodeNonIdentifyingStringOrIndexOnFirstBit(att.getNormalized_value(), vocabulary.attribute_values,algo);
+            Object data = null;
+            if (att instanceof AlgorithmAttribute) {
+                AlgorithmAttribute algoatt = (AlgorithmAttribute)att;
+                algo = algoatt.getAlgorithm();
+                data = algoatt.getDataObject();
+            }
+            if (data != null)
+                encodeObjectNonIdentifyingStringOrIndexOnFirstBit(data, algo);
+            else
+                encodeNonIdentifyingStringOrIndexOnFirstBit(att.getNormalized_value(), vocabulary.attribute_values,algo);
           
         }
         if (!attributes.isEmpty()) {
@@ -367,44 +360,37 @@ public class Encoder {
             int len = encodeUTFinInternalEncodingBuffer(str);
             encodeNonEmptyOctetStringOnSeventhBit(_encodingBuffer, 0, len);
         } else {
-            int algo_index = HashMapObjectInt.NOT_FOUND;
-            if (algo instanceof Alphabet) {
-                current_octet |= FastInfosetConstants.ENCODED_CHARACTER_STRING_5TH_BIT_ALPHABET_DISCRIMINANT;
-                algo_index = vocabulary.alphabets.get(algo);
-            } else {
-                current_octet |= FastInfosetConstants.ENCODED_CHARACTER_STRING_5TH_BIT_ALGORITHM_DISCRIMINANT;
-                algo_index = vocabulary.algorithms.get(algo);
-            }
-            
-            if (algo_index == HashMapObjectInt.NOT_FOUND)
-                throw new IOException("algorithm not found");
-            encodeOctetInteger(algo_index, 7);
             try {
-                encodeNonEmptyOctetStringOnSeventhBit(algo.toByteArray(str));
+                encodeAlgorithm(algo.toByteArray(str), algo, 5);
             } catch (EncodingAlgorithmException ex) {
                 throw new IOException(ex);
             }
         }
 
     }
+    private void encodeAlgorithm(byte[] data, Algorithm algo,int startingBit) throws IOException {
+
+        int algo_index = HashMapObjectInt.NOT_FOUND;
+        if (algo instanceof Alphabet) {
+            current_octet |= FastInfosetConstants.ENCODED_CHARACTER_STRING_3RD_BIT_ALPHABET_DISCRIMINANT>>>(startingBit-3);
+            algo_index = vocabulary.alphabets.get(algo);
+        } else {
+            current_octet |= FastInfosetConstants.ENCODED_CHARACTER_STRING_3RD_BIT_ALGORITHM_DISCRIMINANT>>>(startingBit-3);
+            algo_index = vocabulary.algorithms.get(algo);
+        }
+
+        if (algo_index == HashMapObjectInt.NOT_FOUND)
+            throw new IOException("algorithm not found");
+        encodeOctetInteger(algo_index, startingBit +=2);
+        encodeNonEmptyOctetString(data,startingBit);
+            
+    }
     protected void encodeObjectEncodedCharacterStringOnFifthdbit(Object object, Algorithm algo) throws IOException {
         if (algo == null){
             throw new IOException("No encoding algorithm");
         } else {
-            int algo_index = HashMapObjectInt.NOT_FOUND;
-            if (algo instanceof Alphabet) {
-                current_octet |= FastInfosetConstants.ENCODED_CHARACTER_STRING_5TH_BIT_ALPHABET_DISCRIMINANT;
-                algo_index = vocabulary.alphabets.get(algo);
-            } else {
-                current_octet |= FastInfosetConstants.ENCODED_CHARACTER_STRING_5TH_BIT_ALGORITHM_DISCRIMINANT;
-                algo_index = vocabulary.algorithms.get(algo);
-            }
-            
-            if (algo_index == HashMapObjectInt.NOT_FOUND)
-                throw new IOException("algorithm not found");
-            encodeOctetInteger(algo_index, 7);
             try {
-                encodeNonEmptyOctetStringOnSeventhBit(algo.toByteArray(object));
+                encodeAlgorithm(algo.toByteArray(object), algo, 5);
             } catch (EncodingAlgorithmException ex) {
                 throw new IOException(ex);
             }
@@ -416,6 +402,7 @@ public class Encoder {
         if (algoId < 0){
             throw new IOException("Illegal encoding algorithm index");
         } else {
+            current_octet |= FastInfosetConstants.ENCODED_CHARACTER_STRING_5TH_BIT_ALGORITHM_DISCRIMINANT;
             encodeOctetInteger(algoId, 7);
             encodeNonEmptyOctetStringOnSeventhBit(data);
         }
@@ -437,9 +424,7 @@ public class Encoder {
     protected void encodeNonIdentifyingStringOrIndexOnThirdBit(String str, IndexMap<String> map) throws IOException {
         encodeNonIdentifyingStringOrIndexOnThirdBit(str, map, null);
     }
-//    protected void encodeNonIdentifyingStringOrIndexOnThirdBit(String str, IndexMap<String> map, Algorithm algo) throws IOException {
-//        encodeNonIdentifyingStringOrIndexOnThirdBit(str, map, algo, false);
-//    }
+
 
     protected void encodeNonIdentifyingStringOrIndexOnThirdBit(String str, IndexMap<String> map, Algorithm algo) throws IOException {
         
@@ -458,6 +443,12 @@ public class Encoder {
             }
             encodeEncodedCharacterStringOnFifthdbit(str,algo);
         }
+    }
+    protected void encodeObjectNonIdentifyingStringOrIndexOnFirstBit(Object object, Algorithm algo) throws IOException {
+        //literal encoding
+        //add-to-table equals false for object algorithms
+        encodeObjectEncodedCharacterStringOnThirdbit(object,algo);
+        
     }
     protected void encodeObjectNonIdentifyingStringOrIndexOnThirdBit(Object object, Algorithm algo) throws IOException {
         //literal encoding
@@ -703,32 +694,7 @@ public class Encoder {
         current_octet = FastInfosetConstants.TERMINATION_PATTERN << 4;
         flush_currentoctet();
     }
-    //codificacion con Charset y bufer
-//    private byte[] encodingBuffer = new byte[1024];
-//    private ByteBuffer _bb = ByteBuffer.wrap(encodingBuffer);
-//    private InternalEncodingBuffer internalEncodingBuffer = new InternalEncodingBuffer(encodingBuffer.length);
-//    private void encodeUTFinInternalEncodingBuffer(String str, CharsetEncoder utfEncoder) throws IOException {
-//        CharBuffer cb = CharBuffer.wrap(str);
-//        utfEncoder.reset();
-//        internalEncodingBuffer.reset();
-//        CoderResult cr;
-//        do {
-//            cr = utfEncoder.encode(cb, _bb, true);
-//            internalEncodingBuffer.write(encodingBuffer,0,_bb.position());
-//            _bb.clear();
-//        } while (cr.isOverflow());
-//        utfEncoder.flush(_bb);
-//        internalEncodingBuffer.write(encodingBuffer,0,_bb.position());
-//    }
-//    private class InternalEncodingBuffer extends ByteArrayOutputStream {
-//
-//        public InternalEncodingBuffer(int size) {
-//            super(size);
-//        }
-//        public byte[] getInternalByteArray(){
-//            return buf;
-//        }
-//    }
+
     byte[] _encodingBuffer = new byte[1024];
     char[] _charBuffer = new char[1024];
     protected int encodeUTF8inInternalEncodingBuffer(String str) throws IOException {
