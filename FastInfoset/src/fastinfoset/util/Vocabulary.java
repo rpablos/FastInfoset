@@ -5,7 +5,6 @@ package fastinfoset.util;
 
 import fastinfoset.Document.Name_surrogate;
 import fastinfoset.Algorithm.Algorithm;
-import fastinfoset.Algorithm.Builtin.CDATA;
 import fastinfoset.Alphabet.Alphabet;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -19,7 +18,7 @@ public class Vocabulary extends BuiltinVocabulary {
     InitialVocabulary initialVocabulary = null;
 //    Vocabulary internalInitialVocabulary =null;
     InternalInitialVocabulary internalInitialVocabulary =null;
-    public int MAXIMUM_CHUNK_LENGTH = 32;
+    
     
     public static int INITIAL_CAPACITY_ALGORITHMS = 31;
     public static int INITIAL_CAPACITY_ALPHABETS = 31;
@@ -36,34 +35,7 @@ public class Vocabulary extends BuiltinVocabulary {
     
     public static int INITIAL_CAPACITY_ELEMENTNAME = 1000;
     public static int INITIAL_CAPACITY_ATTRIBUTENAME = 1000;
-    
-//    final static List<Algorithm> algorithms_builtin = new ArrayList<Algorithm>();
-//    final static List<Alphabet> alphabets_builtin = new ArrayList<Alphabet>();
-//     
-//    final static List<String> prefix_builtin = new ArrayList<String>();
-//    final static List<String> namespace_builtin = new ArrayList<String>();
-//    static {
-//        prefix_builtin.add("xml");
-//        namespace_builtin.add("http://www.w3.org/XML/1998/namespace");
-//        //builtin algorithms
-//        Algorithm[] builtinAlgorithmsArray = new Algorithm[31];
-//        builtinAlgorithmsArray[HEXADECIMAL.id] = HEXADECIMAL.instance;
-//        builtinAlgorithmsArray[BASE64.id] = BASE64.instance;
-//        builtinAlgorithmsArray[SHORT.id] = SHORT.instance;
-//        builtinAlgorithmsArray[INT.id] = INT.instance;
-//        builtinAlgorithmsArray[LONG.id] = LONG.instance;
-//        builtinAlgorithmsArray[BOOLEAN.id] = BOOLEAN.instance;
-//        builtinAlgorithmsArray[FLOAT.id] = FLOAT.instance;
-//        builtinAlgorithmsArray[DOUBLE.id] = DOUBLE.instance;
-//        builtinAlgorithmsArray[UUID.id] = UUID.instance;
-//        builtinAlgorithmsArray[CDATA.id] = CDATA.instance;
-//        algorithms_builtin.addAll(Arrays.asList(builtinAlgorithmsArray));
-//        Alphabet[] builtinAlphabetArray = new Alphabet[15];
-//        builtinAlphabetArray[Numeric.id] = Numeric.instance;
-//        builtinAlphabetArray[DateAndTime.id] = DateAndTime.instance;
-//        alphabets_builtin.addAll(Arrays.asList(builtinAlphabetArray));
-//    }
-    
+
     public IndexMap<Algorithm> algorithms = new IndexMap<Algorithm>(INITIAL_CAPACITY_ALGORITHMS); 
     public IndexMap<Alphabet> alphabets = new IndexMap<Alphabet>(INITIAL_CAPACITY_ALPHABETS); 
     
@@ -83,21 +55,21 @@ public class Vocabulary extends BuiltinVocabulary {
     public HashMapObjectInt<String> algorithmURIs = new HashMapObjectInt<String>(INITIAL_CAPACITY_ALGORITHMS); 
     
     public Vocabulary() {
-        this(null);
+        init(null);
     }
     
 //    public Vocabulary(InitialVocabulary initialVocabulary) {
 //        this(initialVocabulary,true);
 //    }
-    public Vocabulary(InitialVocabulary initialVocabulary, int maxChunkLength) {
-        this(initialVocabulary);
-        MAXIMUM_CHUNK_LENGTH = maxChunkLength;
+    public Vocabulary(InitialVocabulary initialVocabulary/*, int maxChunkLength*/) {
+        init(initialVocabulary);
+        //MAXIMUM_CHUNK_LENGTH = maxChunkLength;
     }
-    public Vocabulary(InitialVocabulary initialVocabulary/*, boolean createInternal*/) {
+    private void init(InitialVocabulary initialVocabulary/*, boolean createInternal*/) {
         this.initialVocabulary = initialVocabulary;
         addBuiltinEntries();
         addInitialVocabulary(initialVocabulary);
-        character_chunks.setAllowInsertion(new AllowLimitedStringLenghts());
+//        character_chunks.setAllowInsertion(new AllowLimitedStringLenghts());
         populateAlgorithmURIs();
 //        if (createInternal) {
             internalInitialVocabulary = new InternalInitialVocabulary();
@@ -184,6 +156,21 @@ public class Vocabulary extends BuiltinVocabulary {
     public InitialVocabulary getInitialVocabulary() {
         return initialVocabulary;
     }
+    public void setInitialVocabulary(InitialVocabulary initialVocabulary) {
+        algorithms.clear();
+        alphabets.clear();
+        prefix.clear();
+        namespace.clear();
+        localname.clear();
+        other_ncnames.clear();
+        other_uris.clear();
+        attribute_values.clear();
+        character_chunks.clear();
+        other_strings.clear();
+        elementname.clear();
+        attributename.clear();
+        init(initialVocabulary);
+    }
     
     public InitialVocabulary toInitialVocabulary() {
         InitialVocabulary result = new InitialVocabulary();
@@ -241,19 +228,19 @@ public class Vocabulary extends BuiltinVocabulary {
             }
         }
     }
-    class AllowLimitedStringLenghts implements AllowIndexMap<String> {
-
-        @Override
-        public boolean isInsertionAllowed(String str, Algorithm algo) {
-            return str.length() <= MAXIMUM_CHUNK_LENGTH;
-        }
-
-        @Override
-        public boolean isObtentionAllowed(Algorithm algo) {
-            return (algo == null || !(algo instanceof CDATA));
-        }
-        
-    }
+//    class AllowLimitedStringLenghts implements AllowIndexMap<String> {
+//
+//        @Override
+//        public boolean isInsertionAllowed(String str, Algorithm algo) {
+//            return str.length() <= MAXIMUM_CHUNK_LENGTH;
+//        }
+//
+//        @Override
+//        public boolean isObtentionAllowed(Algorithm algo) {
+//            return (algo == null || !(algo instanceof CDATA));
+//        }
+//        
+//    }
     static private class InternalInitialVocabulary {
         public IndexMap<Algorithm> algorithms; 
         public IndexMap<Alphabet> alphabets; 

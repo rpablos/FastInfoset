@@ -27,6 +27,15 @@ import fastinfoset.Document.UnparsedEntity;
  * @author rpablos
  */
 public class DOM_FI_Encoder extends Encoder {
+
+    public DOM_FI_Encoder() {
+        super();
+    }
+
+    
+    public DOM_FI_Encoder(boolean utf8encoding) {
+        super(utf8encoding);
+    }
     
 
     public final void serialize(Document d) throws IOException {

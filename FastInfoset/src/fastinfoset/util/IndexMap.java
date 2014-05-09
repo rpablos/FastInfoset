@@ -38,8 +38,11 @@ public class IndexMap<K> extends HashMapObjectInt<K> implements Cloneable {
         return result;
     }
     
-    public void setAllowInsertion(AllowIndexMap<K> allow) {
+    public void setAllowIndexMap(AllowIndexMap<K> allow) {
         this.allow = allow;
+    }
+    public AllowIndexMap<K> getAllowIndexMap(){
+        return allow;
     }
 
     @Override

@@ -4,6 +4,7 @@
 package fastinfoset;
 
 import fastinfoset.Algorithm.Algorithm;
+import fastinfoset.Algorithm.Builtin.CDATA;
 import fastinfoset.Algorithm.EncodingAlgorithmException;
 import fastinfoset.Alphabet.Alphabet;
 import java.io.IOException;
@@ -22,6 +23,7 @@ import fastinfoset.util.InitialVocabulary;
 import fastinfoset.Document.Name_surrogate;
 import fastinfoset.Document.Notation;
 import fastinfoset.Document.UnparsedEntity;
+import fastinfoset.util.AllowIndexMap;
 import fastinfoset.util.HashMapObjectInt;
 import fastinfoset.util.Vocabulary;
 
@@ -32,7 +34,9 @@ import fastinfoset.util.Vocabulary;
 public class Encoder {
 
     boolean utf8encoding = true;
-
+    final int DEFAULT_MAXIMUM_LENGTH = 50;
+    AllowLimitedStringLenghts allowLimitedChunkLenghts = new AllowLimitedStringLenghts(DEFAULT_MAXIMUM_LENGTH);
+    AllowLimitedStringLenghts allowLimitedAttValueLenghts = new AllowLimitedStringLenghts(DEFAULT_MAXIMUM_LENGTH);
     Vocabulary vocabulary = new Vocabulary();
     Map<String,UnparsedEntity> UnParsedEntites = new HashMap<String, UnparsedEntity>();
     OutputStream _out;
@@ -45,12 +49,20 @@ public class Encoder {
     }
     public Encoder (boolean utf8encoding) {
         this.utf8encoding = utf8encoding;
+        vocabulary.character_chunks.setAllowIndexMap(allowLimitedChunkLenghts);
+        vocabulary.attribute_values.setAllowIndexMap(allowLimitedAttValueLenghts);
     }
     public void setMaximumChunkLengthForIndexing(int length) {
-        vocabulary.MAXIMUM_CHUNK_LENGTH = length;
+        //vocabulary.MAXIMUM_CHUNK_LENGTH = length;
+        allowLimitedChunkLenghts.setMaximumLength(length);
+    }
+    public void setMaximumAttributeValueLengthForIndexing(int length) {
+        //vocabulary.MAXIMUM_CHUNK_LENGTH = length;
+        allowLimitedAttValueLenghts.setMaximumLength(length);
     }
     public void setInitialVocabulary(InitialVocabulary initialVocabulary) {
-        vocabulary = new Vocabulary(initialVocabulary,vocabulary.MAXIMUM_CHUNK_LENGTH);
+        //vocabulary = new Vocabulary(initialVocabulary,vocabulary.MAXIMUM_CHUNK_LENGTH);
+        vocabulary.setInitialVocabulary(initialVocabulary);
     }
     public InitialVocabulary getDynamicallyGeneratedVocabularyAsInitial() {
         return vocabulary.toInitialVocabulary();
@@ -1056,7 +1068,31 @@ public class Encoder {
         }
     }
 
-    
+    private static class AllowLimitedStringLenghts implements AllowIndexMap<String> {
+        int maximumLength;
+        public AllowLimitedStringLenghts(int maximumLength) {
+            this.maximumLength = maximumLength;
+        }
+
+        public void setMaximumLength(int maximumLength) {
+            this.maximumLength = maximumLength;
+        }
+
+        public int getMaximumLength() {
+            return maximumLength;
+        }
+        
+        @Override
+        public boolean isInsertionAllowed(String str, Algorithm algo) {
+            return str.length() <= maximumLength;
+        }
+
+        @Override
+        public boolean isObtentionAllowed(Algorithm algo) {
+            return (algo == null || !(algo instanceof CDATA));
+        }
+        
+    }
 
     
 

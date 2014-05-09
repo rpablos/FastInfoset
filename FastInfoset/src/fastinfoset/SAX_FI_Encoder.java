@@ -44,6 +44,15 @@ public class SAX_FI_Encoder extends Encoder implements ContentHandler, DTDHandle
     private List<ProcessingInstruction> processingInstructionsInDTD = new ArrayList<ProcessingInstruction>();
     private DocumentType documentType = null;;
     Locator locator;
+
+    public SAX_FI_Encoder() {
+        super();
+    }
+
+    
+    public SAX_FI_Encoder(boolean utf8encoding) {
+        super(utf8encoding);
+    }
     
     
     

@@ -71,42 +71,8 @@ public class FICoder {
            long time = System.currentTimeMillis();
            xmlreader.parse(new InputSource(new FileInputStream(origen)));
            System.out.println("Tiempo: "+(System.currentTimeMillis()-time)+" ms con parseo y serialización SAX"); 
-           
-           
-//        System.err.println("Procesando con DOM de java...");
-//        long time = System.currentTimeMillis();
-//        Document doc = db.parse(origen);
-//        System.out.println("Tiempo: "+(System.currentTimeMillis()-time)+" ms");
-//
-//        DOM_FI_Encoder domser2 = new DOM_FI_Encoder();
-//        
-//        domser2.setOutputStream(out);
-////        domser2.setEncodeXMLEncoding(true);
-////        domser2.setEncodeXMLVersion(true);
-//        System.err.println("Serializando DOM con librería propia...");
-//        time = System.currentTimeMillis();
-//
-//            domser2.serialize(doc);
-//
-//        System.out.println("Tiempo: "+(System.currentTimeMillis()-time)+" ms");
-//        //System.err.println("Tamaño FI: "+destino.size());
-        
-         
+               
        } else {
-//            DOM_FI_Decoder domdecoder = new DOM_FI_Decoder();
-//            
-//            long time = System.currentTimeMillis();
-//            Document docpar = domdecoder.parse(new BufferedInputStream(new FileInputStream(origen)));
-//            System.out.println("Tiempo: "+(System.currentTimeMillis()-time)+" ms con procesado DOM"); 
-////            DOMDocumentParser dompar = new DOMDocumentParser();
-////            Document docpar = db.newDocument();
-////            dompar.parse(docpar, new FileInputStream(origen));
-//
-//            TransformerFactory transformerFactory = TransformerFactory.newInstance();
-//            Transformer transformer = transformerFactory.newTransformer();
-//            DOMSource source = new DOMSource(docpar);
-//            StreamResult result = new StreamResult(destino);
-//            transformer.transform(source, result);
            TransformerFactory transformerFactory = TransformerFactory.newInstance();
            Transformer transformer = transformerFactory.newTransformer();
            FastInfosetSource source = new FastInfosetSource(new BufferedInputStream(new FileInputStream(origen)));
