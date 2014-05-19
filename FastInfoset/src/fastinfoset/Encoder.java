@@ -52,16 +52,53 @@ public class Encoder {
         vocabulary.character_chunks.setAllowIndexMap(allowLimitedChunkLenghts);
         vocabulary.attribute_values.setAllowIndexMap(allowLimitedAttValueLenghts);
     }
-    public void setMaximumChunkLengthForIndexing(int length) {
-        //vocabulary.MAXIMUM_CHUNK_LENGTH = length;
+
+    /**
+     * Set the default policy for indexing character chunks.
+     * The default policy only indexes those character chunks whose length is 
+     * less or equal to maximum length.
+     * Additionally, it prevents from obtaining index for those string that 
+     * must be encoded with CDATA algorithm, resulting in literal encoding for 
+     * this case.
+     * @param length maximum length for character chunks
+     */
+    public void setDefaultAllowPolicyMaximumChunkLengthForIndexing(int length) {
         allowLimitedChunkLenghts.setMaximumLength(length);
+        setAllowPolicyForChunks(allowLimitedChunkLenghts);
     }
-    public void setMaximumAttributeValueLengthForIndexing(int length) {
-        //vocabulary.MAXIMUM_CHUNK_LENGTH = length;
+
+    /**
+     * Set the default policy for indexing attribute values.
+     * The default policy only indexes those attribute values whose length is 
+     * less or equal to a maximum length.
+     * Additionally, it prevents from obtaining index for those string that 
+     * must be encoded with CDATA algorithm, resulting in literal encoding for 
+     * this case.
+     * @param length
+     */
+    public void setDefaultAllowPolicyMaximumAttributeValueLengthForIndexing(int length) {
         allowLimitedAttValueLenghts.setMaximumLength(length);
+        setAllowPolicyForAttributeValues(allowLimitedAttValueLenghts);
+    }
+
+    /**
+     * Set the policy for indexing character chunks
+     * 
+     * @param allowPolicy the policy to be used with character chunks
+     */
+    public void setAllowPolicyForChunks(AllowIndexMap<String> allowPolicy) {
+        vocabulary.character_chunks.setAllowIndexMap(allowPolicy);
+    }
+
+    /**
+     * Set the policy for indexing attribute values
+     * 
+     * @param allowPolicy the policy to be used with attribute values
+     */
+    public void setAllowPolicyForAttributeValues(AllowIndexMap<String> allowPolicy) {
+        vocabulary.attribute_values.setAllowIndexMap(allowPolicy);
     }
     public void setInitialVocabulary(InitialVocabulary initialVocabulary) {
-        //vocabulary = new Vocabulary(initialVocabulary,vocabulary.MAXIMUM_CHUNK_LENGTH);
         vocabulary.setInitialVocabulary(initialVocabulary);
     }
     public InitialVocabulary getDynamicallyGeneratedVocabularyAsInitial() {
@@ -1089,7 +1126,8 @@ public class Encoder {
 
         @Override
         public boolean isObtentionAllowed(Algorithm algo) {
-            return (algo == null || !(algo instanceof CDATA));
+            //return (algo == null || !(algo instanceof CDATA));
+            return !(algo instanceof CDATA);
         }
         
     }

@@ -4,7 +4,6 @@
 package fastinfoset;
 
 import fastinfoset.Algorithm.Algorithm;
-import fastinfoset.Algorithm.Builtin.CDATA;
 import fastinfoset.util.AllowIndexMap;
 import fastinfoset.util.InitialVocabulary;
 

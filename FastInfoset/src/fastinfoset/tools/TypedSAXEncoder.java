@@ -92,7 +92,7 @@ public class TypedSAXEncoder extends SAX_FI_Encoder {
             XMLReader xmlreader = sp.getXMLReader();
             TypedSAXEncoder handler = new TypedSAXEncoder(elementToalgorithm,attributeToalgorithm,csvElements);
             handler.setOutputStream(out);
-            handler.setMaximumChunkLengthForIndexing(maxChunkLen);
+            handler.setDefaultAllowPolicyMaximumChunkLengthForIndexing(maxChunkLen);
             if (!initialVocabulary.isEmpty())
                 handler.setInitialVocabulary(initialVocabulary);
             

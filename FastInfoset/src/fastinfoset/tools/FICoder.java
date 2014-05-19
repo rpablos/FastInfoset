@@ -71,7 +71,7 @@ public class FICoder {
            long time = System.currentTimeMillis();
            xmlreader.parse(new InputSource(new FileInputStream(origen)));
            System.out.println("Tiempo: "+(System.currentTimeMillis()-time)+" ms con parseo y serialización SAX"); 
-               
+           
        } else {
            TransformerFactory transformerFactory = TransformerFactory.newInstance();
            Transformer transformer = transformerFactory.newTransformer();
