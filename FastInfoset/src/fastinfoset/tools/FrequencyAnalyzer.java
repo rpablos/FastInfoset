@@ -26,7 +26,6 @@ public class FrequencyAnalyzer {
         SAXParserFactory saxFactory = SAXParserFactory.newInstance();
         saxFactory.setNamespaceAware(true);
         SAXParser parser = saxFactory.newSAXParser();
-        //parser.parse(new File ("c:\\cygwin\\home\\rpablos\\note.xml"), handler);
         for (String arg: args) {
             parser.reset();
             parser.parse(new File(arg), handler);
@@ -47,9 +46,7 @@ public class FrequencyAnalyzer {
         
         @Override
         public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
-//            if (!uri.isEmpty()) CountIntoTable(uri, namespaces);
             String prefix = getPrefix(qName);
-//            if (!prefix.isEmpty()) CountIntoTable(prefix, prefixes);
             CountIntoTable(localName, localnames);
             QName qname = new QName(uri, localName, prefix);
             CountIntoTable(qname, elementnames);

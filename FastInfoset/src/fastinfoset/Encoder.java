@@ -74,7 +74,7 @@ public class Encoder {
      * Additionally, it prevents from obtaining index for those string that 
      * must be encoded with CDATA algorithm, resulting in literal encoding for 
      * this case.
-     * @param length
+     * @param length maximum length for attribute values
      */
     public void setDefaultAllowPolicyMaximumAttributeValueLengthForIndexing(int length) {
         allowLimitedAttValueLenghts.setMaximumLength(length);
@@ -82,9 +82,11 @@ public class Encoder {
     }
 
     /**
-     * Set the policy for indexing character chunks
+     * Set the policy for indexing character chunks.
      * 
-     * @param allowPolicy the policy to be used with character chunks
+     * @param allowPolicy the policy to be used with character chunks.
+     * <code>null</code> for no policy
+     * 
      */
     public void setAllowPolicyForChunks(AllowIndexMap<String> allowPolicy) {
         vocabulary.character_chunks.setAllowIndexMap(allowPolicy);
@@ -93,20 +95,56 @@ public class Encoder {
     /**
      * Set the policy for indexing attribute values
      * 
-     * @param allowPolicy the policy to be used with attribute values
+     * @param allowPolicy the policy to be used with attribute values.
+     * <code>null</code> for no policy
      */
     public void setAllowPolicyForAttributeValues(AllowIndexMap<String> allowPolicy) {
         vocabulary.attribute_values.setAllowIndexMap(allowPolicy);
     }
+
+    /**
+     * Set the policy for indexing other strings
+     * 
+     * @param allowPolicy the policy to be used with attribute values.
+     * <code>null</code> for no policy
+     */
+    public void setAllowPolicyForOtherStrings(AllowIndexMap<String> allowPolicy) {
+        vocabulary.other_strings.setAllowIndexMap(allowPolicy);
+    }
+
+    /**
+     * Set the initial vocabulary.
+     * @param initialVocabulary the initial vocabulary
+     */
     public void setInitialVocabulary(InitialVocabulary initialVocabulary) {
         vocabulary.setInitialVocabulary(initialVocabulary);
     }
+
+    /**
+     * Get the vocabulary obtained dynamically during the encoding process.
+     * It does not include the initial vocabulary.
+     * 
+     * @return the vocabulary generated dynamically during the encoding
+     */
     public InitialVocabulary getDynamicallyGeneratedVocabularyAsInitial() {
         return vocabulary.toInitialVocabulary();
     }
+
+    /**
+     * Get the initial vocabulary along with the vocabulary dynamically generated
+     * during the encoding.
+     * 
+     * @return the vocabulary, including the initial vocabulary and 
+     * the dynamically generated vocabulary
+     */
     public InitialVocabulary getAllVocabularyAsInitial() {
         return vocabulary.toInitialVocabularyIncludingInitialVocabulary();
     }
+
+    /**
+     * Reset the encoder so that it is prepared to encode again.
+     * <p>Reset internal states and remove the dynamically generated vocabulary.
+     */
     public void reset() {
         clear_currentoctet();
         vocabulary.reset();

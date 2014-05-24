@@ -4,32 +4,18 @@
 package fastinfoset;
 
 
-import fastinfoset.Algorithm.Algorithm;
 import fastinfoset.Algorithm.Builtin.CDATA;
-import fastinfoset.Alphabet.Alphabet;
-import fastinfoset.Document.Additional_datum;
 import fastinfoset.Document.DocumentType;
 import fastinfoset.Document.Element.Attribute;
 import fastinfoset.Document.Element.NamespaceAttribute;
-import fastinfoset.Document.Name_surrogate;
 import fastinfoset.Document.Notation;
 import fastinfoset.Document.ProcessingInstruction;
 import fastinfoset.Document.UnparsedEntity;
-import fastinfoset.util.ArrayIndex;
-import fastinfoset.util.DecoderVocabulary;
 import fastinfoset.util.EncodedString;
-import fastinfoset.util.HashMapObjectInt;
-import fastinfoset.util.IndexMap;
-import fastinfoset.util.InitialVocabulary;
-import java.io.DataInputStream;
-import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;

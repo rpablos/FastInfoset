@@ -69,7 +69,7 @@ public class FICoder {
            xmlreader.setDTDHandler(myhandler);
            xmlreader.setProperty("http://xml.org/sax/properties/lexical-handler", myhandler);
            long time = System.currentTimeMillis();
-           xmlreader.parse(new InputSource(new FileInputStream(origen)));
+           xmlreader.parse(new InputSource(new BufferedInputStream(new FileInputStream(origen))));
            System.out.println("Tiempo: "+(System.currentTimeMillis()-time)+" ms con parseo y serialización SAX"); 
            
        } else {

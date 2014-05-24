@@ -16,7 +16,6 @@ import java.util.List;
  */
 public class Vocabulary extends BuiltinVocabulary {
     InitialVocabulary initialVocabulary = null;
-//    Vocabulary internalInitialVocabulary =null;
     InternalInitialVocabulary internalInitialVocabulary =null;
     
     
@@ -58,20 +57,15 @@ public class Vocabulary extends BuiltinVocabulary {
         init(null);
     }
     
-//    public Vocabulary(InitialVocabulary initialVocabulary) {
-//        this(initialVocabulary,true);
-//    }
-    public Vocabulary(InitialVocabulary initialVocabulary/*, int maxChunkLength*/) {
+    public Vocabulary(InitialVocabulary initialVocabulary) {
         init(initialVocabulary);
-        //MAXIMUM_CHUNK_LENGTH = maxChunkLength;
     }
-    private void init(InitialVocabulary initialVocabulary/*, boolean createInternal*/) {
+    private void init(InitialVocabulary initialVocabulary) {
         this.initialVocabulary = initialVocabulary;
         addBuiltinEntries();
         addInitialVocabulary(initialVocabulary);
-//        character_chunks.setAllowInsertion(new AllowLimitedStringLenghts());
         populateAlgorithmURIs();
-//        if (createInternal) {
+
             internalInitialVocabulary = new InternalInitialVocabulary();
             
             internalInitialVocabulary.algorithms = (IndexMap<Algorithm>) algorithms.clone();
@@ -89,12 +83,6 @@ public class Vocabulary extends BuiltinVocabulary {
             
             internalInitialVocabulary.elementname = (IndexMap<Name_surrogate>) elementname.clone();
             internalInitialVocabulary.attributename = (IndexMap<Name_surrogate>) attributename.clone();
-//        }
-//        else {
-           
-//        }
-        //limitar la longitud de las cadenas que se insertan en la tabla CHARACTER_CHUNKS
-      
     }
     
     private void addInitialVocabulary(InitialVocabulary initialVocabulary) {
@@ -103,18 +91,6 @@ public class Vocabulary extends BuiltinVocabulary {
         InitialVocabulary external = initialVocabulary.getExternalVocabulary();
         if (external != null) {
             addInitialVocabulary(external);
-//            addToMap(prefix, external.prefixes);
-//            addToMap(namespace, external.namespaces);
-//            addToMap(localname, external.localnames);
-//            
-//            addToMap(other_ncnames, external.other_ncnames);
-//            addToMap(other_uris, external.other_uris);
-//            addToMap(attribute_values, external.attribute_values);
-//            addToMap(character_chunks, external.character_chunks);
-//            addToMap(other_strings, external.other_strings);
-//        
-//            addToMap(elementname, external.elementnames);
-//            addToMap(attributename, external.attributenames);
         }
         addToMap(algorithms, initialVocabulary.algorithms);
         addToMap(alphabets, initialVocabulary.alphabets);
@@ -134,9 +110,7 @@ public class Vocabulary extends BuiltinVocabulary {
     }
     private void addBuiltinEntries() {
         addToMap(algorithms, algorithms_builtin);
-        //algorithms.remove(null);
         addToMap(alphabets, alphabets_builtin);
-        //alphabets.remove(null);
         addToMap(prefix, prefix_builtin);
         addToMap(namespace, namespace_builtin);
     }
@@ -148,8 +122,6 @@ public class Vocabulary extends BuiltinVocabulary {
                 map.index++; //null especial, para hacer correr el índice
             else 
                 map.addNewIndexEntry(t);
-//            if (t == null || !map.containsKey(t)) // null especial, para hacer correr el índice
-//                map.addNewIndexEntry(t);
         }
     }
 
@@ -228,19 +200,7 @@ public class Vocabulary extends BuiltinVocabulary {
             }
         }
     }
-//    class AllowLimitedStringLenghts implements AllowIndexMap<String> {
-//
-//        @Override
-//        public boolean isInsertionAllowed(String str, Algorithm algo) {
-//            return str.length() <= MAXIMUM_CHUNK_LENGTH;
-//        }
-//
-//        @Override
-//        public boolean isObtentionAllowed(Algorithm algo) {
-//            return (algo == null || !(algo instanceof CDATA));
-//        }
-//        
-//    }
+
     static private class InternalInitialVocabulary {
         public IndexMap<Algorithm> algorithms; 
         public IndexMap<Alphabet> alphabets; 
