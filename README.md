@@ -126,3 +126,5 @@ The size of the XML document is <b>2120</b> octets.
 The size of the Fast Infoset is <b>743</b> octets without using any extra optimization like algorithms, alphabets or external vocabularies.
 
 The first one does not fit in a common 1500 octets IP packet. The second does.
+
+See [wiki](https://github.com/rpablos/FastInfoset/wiki/Fast-Infoset-Wiki) for some information about tools for playing with fast infoset.
