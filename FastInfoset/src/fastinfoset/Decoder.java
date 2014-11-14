@@ -73,7 +73,18 @@ public class Decoder {
     public Map<String, InitialVocabulary> getRegistredVocabularies() {
         return registredExternalVocabulary;
     }
-    
+    public List<Additional_datum> getAdditional_Data() {
+        return additional_data;
+    }
+    public Boolean getIsStandalone() {
+        return IsStandalone;
+    }
+    public String getXMLEncoding() {
+        return XMLEncoding;
+    }
+    public String getXMLVersion() {
+        return XMLVersion;
+    }
     char[] _decodingBuffer = new char[1024];
     public int decodeUTF8inInternalEncodingBuffer(byte[] data) throws IOException {
         return decodeUTF8inInternalEncodingBuffer(data, 0, data.length);

@@ -154,6 +154,9 @@ public class Encoder {
         return vocabulary.toInitialVocabularyIncludingInitialVocabulary();
     }
 
+    public void setAdditional_Data(List<Additional_datum> additional_data) {
+        this.additional_data = additional_data;
+    }
     /**
      * Reset the encoder so that it is prepared to encode again.
      * <p>Reset internal states and remove the dynamically generated vocabulary.
